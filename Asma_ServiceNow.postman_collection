@@ -1,0 +1,335 @@
+{
+	"info": {
+		"_postman_id": "6f9ed870-0f11-4aeb-9131-c3da1cb68e93",
+		"name": "ServiceNow",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "9914832"
+	},
+	"item": [
+		{
+			"name": "CreateIncident",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 201\", function(){\r",
+							"    pm.response.to.have.status(201);\r",
+							"   // pm.expect(pm.response.responseTime).to.be.below(201);\r",
+							"});\r",
+							"Resp = pm.response.json();\r",
+							"pm.globals.set(\"sysId\",Resp.result.sys_id);\r",
+							"//??????console.log('sys-idis, ${sysId}');\r",
+							"//console.log(pm.globals.get('sysId'));\r",
+							"pm.globals.set(\"impactNo\",Resp.result.impact);\r",
+							"pm.globals.set(\"SD\",Resp.result.short_description);\r",
+							"pm.globals.set(\"Approval\",Resp.result.upon_approval);\r",
+							"console.log(\"sysId \" +Resp.result.sys_id);\r",
+							"console.log(\"impactNo \"+Resp.result.impact);\r",
+							"console.log(\"SD \"+Resp.result.short_description);\r",
+							"console.log(\"Approval \"+Resp.result.upon_approval);"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"short_description\": \"My system Bluetooth is not supporting\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev49393.service-now.com/api/now/table/incident",
+					"protocol": "https",
+					"host": [
+						"dev49393",
+						"service-now",
+						"com"
+					],
+					"path": [
+						"api",
+						"now",
+						"table",
+						"incident"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetIncidentBySysIdManual",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 201\", function(){\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201])\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev49393.service-now.com/api/now/table/incident/ab6eb02b1bc025105c77a9f9bc4bcbf7",
+					"protocol": "https",
+					"host": [
+						"dev49393",
+						"service-now",
+						"com"
+					],
+					"path": [
+						"api",
+						"now",
+						"table",
+						"incident",
+						"ab6eb02b1bc025105c77a9f9bc4bcbf7"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "GetIncidentBySysIdFromGVar",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200 or 201\", function(){\r",
+							"    pm.expect(pm.response.code).to.be.oneOf([200,201])\r",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://dev49393.service-now.com/api/now/table/incident/{{sysId}}",
+					"protocol": "https",
+					"host": [
+						"dev49393",
+						"service-now",
+						"com"
+					],
+					"path": [
+						"api",
+						"now",
+						"table",
+						"incident",
+						"{{sysId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdateIncidentManyFields",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"Resp = pm.response.json();\r",
+							"pm.globals.set(\"updated impactNo\",Resp.result.impact);\r",
+							"pm.globals.set(\"updated SD\",Resp.result.short_description);\r",
+							"pm.globals.set(\"updated Approval\",Resp.result.upon_approval);\r",
+							"console.log(\"updated impactNo \"+Resp.result.impact);\r",
+							"console.log(\"updated SD \"+Resp.result.short_description);\r",
+							"console.log(\"updated Approval \"+Resp.result.upon_approval);\r",
+							"//1. Why I am unable to change these field values upon approval"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"impact\": \"2\",\r\n    \"short_description\": \"Bluetooth operation failed\",\r\n    \"upon_approval\": \"need to proceed\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev49393.service-now.com/api/now/table/incident/{{sysId}}",
+					"protocol": "https",
+					"host": [
+						"dev49393",
+						"service-now",
+						"com"
+					],
+					"path": [
+						"api",
+						"now",
+						"table",
+						"incident",
+						"{{sysId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "UpdatePriorityField",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 200\", function(){\r",
+							"    pm.response.to.have.status(200);\r",
+							"});\r",
+							"Resp = pm.response.json;\r",
+							"//pm.globals.set(\"Priority\", Resp.result.priority);\r",
+							"pm.globals.set(\"Category\",Resp.result.category);\r",
+							"pm.globals.set(\"Incident\", Resp.result.incident_state);\r",
+							"//console.log(\"Priority \" +Resp.result.priority);\r",
+							"//console.log(\"Category \" +Resp.result.category);\r",
+							"console.log(\"Incident \" +Resp.result.incident_state);\r",
+							"\r",
+							"//1. Why I am unable to change these field values Priority, incident state and category\r",
+							"//2. Will it show console result one by one\r",
+							"//Seeing - TypeError: Cannot read properties of undefined (reading 'category') even I commented the console statement"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"category\":\"injured\",\"incident_state\":\"2\"}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev49393.service-now.com/api/now/table/incident/{{sysId}}",
+					"protocol": "https",
+					"host": [
+						"dev49393",
+						"service-now",
+						"com"
+					],
+					"path": [
+						"api",
+						"now",
+						"table",
+						"incident",
+						"{{sysId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "DeleteIncident",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Status code is 204\", function(){\r",
+							"    pm.response.to.have.status(204);\r",
+							"});\r",
+							"\r",
+							"//unable to run delete in collection runner, assumption is patch got failure"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://dev49393.service-now.com/api/now/table/incident/{{sysId}}",
+					"protocol": "https",
+					"host": [
+						"dev49393",
+						"service-now",
+						"com"
+					],
+					"path": [
+						"api",
+						"now",
+						"table",
+						"incident",
+						"{{sysId}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			},
+			{
+				"key": "password",
+				"value": "WsQMHg/0us1@",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
